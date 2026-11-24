@@ -1,0 +1,9 @@
+.git
+.gitlab-ci.yml
+.github
+**/bin
+**/obj
+**/TestResults
+.env
+*.env
+image.tar

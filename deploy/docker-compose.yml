@@ -1,0 +1,32 @@
+# Compose usado en los servidores de cada entorno (lo copia deploy.sh).
+# Las variables IMAGE, ASPNETCORE_ENVIRONMENT y DB_PASSWORD las exporta el pipeline.
+services:
+  api:
+    image: ${IMAGE:?falta IMAGE}
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:?falta ASPNETCORE_ENVIRONMENT}
+      ConnectionStrings__DefaultConnection: Host=db;Port=5432;Database=inventario;Username=app;Password=${DB_PASSWORD:?falta DB_PASSWORD}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: inventario
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?falta DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d inventario"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
