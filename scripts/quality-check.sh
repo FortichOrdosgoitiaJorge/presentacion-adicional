@@ -6,7 +6,8 @@ source ./scripts/common.sh
 
 : "${SONAR_HOST_URL:?Falta SONAR_HOST_URL en las variables de CI/CD}"
 : "${SONAR_TOKEN:?Falta SONAR_TOKEN en las variables de CI/CD}"
-SONAR_PROJECT_KEY="${SONAR_PROJECT_KEY:-inventario}"
+: "${SONAR_ORGANIZATION:?Falta SONAR_ORGANIZATION en las variables de CI/CD}"
+: "${SONAR_PROJECT_KEY:?Falta SONAR_PROJECT_KEY en las variables de CI/CD}"
 
 SLN="$(find_solution)"
 
@@ -21,6 +22,7 @@ dotnet tool install --global dotnet-sonarscanner >/dev/null 2>&1 \
 export PATH="$PATH:$HOME/.dotnet/tools"
 
 dotnet sonarscanner begin \
+  /o:"$SONAR_ORGANIZATION" \
   /k:"$SONAR_PROJECT_KEY" \
   /d:sonar.host.url="$SONAR_HOST_URL" \
   /d:sonar.token="$SONAR_TOKEN" \
