@@ -1,0 +1,10 @@
+# Artefactos de compilación y pruebas de .NET
+bin/
+obj/
+TestResults/
+*.user
+.vs/
+
+# Secretos locales
+.env
+*.env
